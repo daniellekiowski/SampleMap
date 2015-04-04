@@ -10,7 +10,7 @@ d3.csv('../data/transportation.csv',function(error,data){
 	for (var i = 1; i < data.length; i++) {
 		mapData.push({
 			state: data[i]["GEO.display-label"],
-			value: data[i]["HC01_EST_VC118"]
+			value: (data[i]["HC01_EST_VC118"]=="N"?"":data[i]["HC01_EST_VC118"])
 		});
 	};
 

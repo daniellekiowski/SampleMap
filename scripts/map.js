@@ -9,9 +9,20 @@ function mapChart(selection) {
 	function map(selection){
 		selection.each(function(d,i){
 			d3.select(this).append("h1").text(title);
+
+			//set up space for map
 			var svgMap = d3.select(this).append("svg")
 				.attr("width",width)
 				.attr("height",height);
+
+			//make a hidden div that will be used to display data
+			var tip = d3.select(this).append("div")
+				.style("width", "100px")
+				.style("height", "50px")
+				.style("border-radius","15px")
+				.style("background-color", "#000")
+				.style("color","#fff")
+				.style("opacity", 0);
 
 			d3.json("data/us-states.json",function(error,json){
 				if(error){
@@ -32,6 +43,8 @@ function mapChart(selection) {
 				updateMap(d);
 				
 				function updateMap(data){
+
+					//
 					for (var i = 0; i < data.length; i++) {
 						for (var j = 0; j < json.features.length; j++) {
 							if(data[i]["state"] == json.features[j]["properties"]["name"]){
@@ -44,7 +57,7 @@ function mapChart(selection) {
 						.data(json.features)
 						.attr("fill",function(e){return "#aaa";})
 						.on("mouseover",function(e){
-							console.log(e["properties"]["value"]+" "+units);
+							console.log(e["properties"]["value"]?(e["properties"]["value"]+" "+units):"No Data");
 						});
 				}
 			});
