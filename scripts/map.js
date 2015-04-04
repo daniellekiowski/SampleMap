@@ -5,9 +5,10 @@ function mapChart(selection) {
 	var width = 950;
 	var height = 500;
 	var units = "";
+	var colors = ["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"]
 
 	function map(selection){
-		selection.each(function(d,i){
+		selection.each(function(elemData,i){
 			d3.select(this).append("h1").text(title);
 
 			//set up space for map
@@ -32,7 +33,7 @@ function mapChart(selection) {
 					console.log(error);
 					return;
 				}
-				console.log(json.features);
+				
 				//draw grey map
 				var geo = d3.geo.path(); 
 				svgMap.selectAll("path")
@@ -40,10 +41,10 @@ function mapChart(selection) {
 					.enter()
 					.append("path")
 					.attr("d",geo)
-					.attr("fill","#aaa");
+					.attr("fill","#555");
 
 				//fill in colors
-				updateMap(d);
+				updateMap(elemData);
 				
 				function updateMap(data){
 
@@ -56,9 +57,22 @@ function mapChart(selection) {
 						};
 					};
 
+					//define color range
+					var color = d3.scale.quantize()
+									.domain([d3.min(json.features,function(d){return Number(d["properties"]["value"]);}),
+										d3.max(json.features,function(d){return Number(d["properties"]["value"]);})
+									])
+									.range(colors);
+
+					//color in map
 					svgMap.selectAll("path")
 						.data(json.features)
-						.attr("fill",function(e){return "#aaa";})
+						.attr("fill",function(d){
+							if(d["properties"]["value"]){
+								return color(d["properties"]["value"]);
+							}
+							return "#555";
+						})
 						.on("mouseover",function(e){
 							tip.html(e["properties"]["name"]+"<br>"+(e["properties"]["value"]?(e["properties"]["value"]+" "+units):"No Data"))
 								.style("top",(d3.event.pageY+5)+"px")
@@ -104,6 +118,14 @@ function mapChart(selection) {
 			return units;
 		}
 		units = _;
+		return map;
+	}
+
+	map.colors = function(_){
+		if(!arguments.length){
+			return colors;
+		}
+		colors = _;
 		return map;
 	}
 
