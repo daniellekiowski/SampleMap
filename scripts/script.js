@@ -1,4 +1,4 @@
-d3.csv('../data/transportation.csv',function(error,data){
+d3.csv('../SampleMap/data/transportation.csv',function(error,data){
 	
 	if(error){
 		console.log(error);
