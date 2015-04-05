@@ -28,7 +28,7 @@ function mapChart(selection) {
 				.style("text-align","center")
 				.style("opacity", 0);
 
-			d3.json("SampleMap/data/us-states.json",function(error,json){
+			d3.json("data/us-states.json",function(error,json){
 				if(error){
 					console.log(error);
 					return;
