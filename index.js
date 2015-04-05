@@ -10,3 +10,5 @@ var fileServer = new(static.Server)();
 http.createServer(function(request,response){
 	fileServer.serve(request,response);
 }).listen(8080);
+
+console.log('Listening on 8080.');
